@@ -1,0 +1,62 @@
+{
+  "bundle_version": "audit_tfidf_pcap_bge_m3_fusion_v2",
+  "mode": "fusion",
+  "audit_encoder": "tfidf",
+  "net_encoder": "bge-m3",
+  "train_sample_count": 2360,
+  "require_both_modalities": true,
+  "label_names": {
+    "0": "innocent",
+    "1": "malicious"
+  },
+  "host_numeric_names": [
+    "syscall_total",
+    "syscall_failed",
+    "syscall_exit_neg2",
+    "syscall_failed_ratio",
+    "execve_total",
+    "execve_failed",
+    "execve_failed_ratio",
+    "execve_payload_chars"
+  ],
+  "net_numeric_names": [
+    "packet_count",
+    "total_bytes",
+    "up_bytes",
+    "down_bytes",
+    "up_ratio",
+    "pkt_len_min",
+    "pkt_len_max",
+    "pkt_len_mean",
+    "pkt_len_std",
+    "iat_mean",
+    "iat_std",
+    "iat_max",
+    "dns_domain_count",
+    "sni_count",
+    "http_host_count"
+  ],
+  "modality_flag_names": [
+    "audit_present",
+    "pcap_present"
+  ],
+  "audit_tfidf_max_features": 100000,
+  "net_tfidf_max_features": 5000,
+  "tfidf_min_df": 2,
+  "tfidf_max_df": 0.95,
+  "host_numeric_weight": 1.0,
+  "net_numeric_weight": 2.0,
+  "pcap_feature_version": 3,
+  "bge_model": "/Users/yousa/.cache/modelscope/hub/models/BAAI/bge-m3",
+  "bge_chunk_tokens": 384,
+  "bge_chunk_stride": 384,
+  "bge_chunk_pooling": "mean",
+  "bge_batch_size": 8,
+  "bge_normalize": true,
+  "bge_encoding_version": 3,
+  "pcap_bge_encoding_version": 2,
+  "max_token_repeat": 30,
+  "svm_c": 1.0,
+  "svm_class_weight": "balanced",
+  "random_state": 42
+}
