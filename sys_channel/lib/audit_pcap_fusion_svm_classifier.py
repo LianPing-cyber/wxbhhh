@@ -69,7 +69,7 @@ from sklearn.svm import LinearSVC
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).parent))
-from wxbhhh.sys_channel.lib.tokenize_audit_log import (  # noqa: E402
+from sys_channel.lib.tokenize_audit_log import (  # noqa: E402
     count_tokens_in_audit_file,
     should_skip_token,
 )

@@ -19,7 +19,7 @@ from tokenize_audit_log import count_tokens_in_audit_file
 # 2. 三大核心预测函数 (Audit / PCAP / Fusion)
 # ==========================================
 
-def predict_audit_data(extracted_data: list[dict], model_dir: str | Path) -> list[dict]:
+def predict_audit_data(extracted_data: list[dict], model_dir: str | Path) -> list[int]:
     """仅基于 Audit 模态进行恶意性预测"""
     svm, artifacts, config = pipeline.load_fusion_model_bundle(Path(model_dir))
     pipeline.BGE_CHUNK_POOLING = config.get("bge_chunk_pooling", "mean")
@@ -63,13 +63,11 @@ def predict_audit_data(extracted_data: list[dict], model_dir: str | Path) -> lis
 
     y_pred = pipeline.predict_fusion_samples(samples, svm, artifacts, audit_bge_matrix=audit_bge, net_bge_matrix=None)
     
-    return [
-        {"sample_id": s.file_name, "prediction": int(p), "mode": "audit", "session": item["session"]} 
-        for s, p, item in zip(samples, y_pred, extracted_data)
-    ]
+    # 直接返回预测结果的整数列表
+    return [int(p) for p in y_pred]
 
 
-def predict_pcap_data(extracted_data: list[dict], model_dir: str | Path) -> list[dict]:
+def predict_pcap_data(extracted_data: list[dict], model_dir: str | Path) -> list[int]:
     """仅基于 PCAP 模态进行恶意性预测"""
     svm, artifacts, config = pipeline.load_fusion_model_bundle(Path(model_dir))
     
@@ -107,13 +105,10 @@ def predict_pcap_data(extracted_data: list[dict], model_dir: str | Path) -> list
 
     y_pred = pipeline.predict_fusion_samples(samples, svm, artifacts, audit_bge_matrix=None, net_bge_matrix=net_bge)
     
-    return [
-        {"sample_id": s.file_name, "prediction": int(p), "mode": "pcap", "session": item["session"]} 
-        for s, p, item in zip(samples, y_pred, extracted_data)
-    ]
+    return [int(p) for p in y_pred]
 
 
-def predict_fusion_data(extracted_data: list[dict], model_dir: str | Path) -> list[dict]:
+def predict_fusion_data(extracted_data: list[dict], model_dir: str | Path) -> list[int]:
     """基于 Audit 和 PCAP 双模态进行融合恶意性预测"""
     svm, artifacts, config = pipeline.load_fusion_model_bundle(Path(model_dir))
     pipeline.BGE_CHUNK_POOLING = config.get("bge_chunk_pooling", "mean")
@@ -183,7 +178,4 @@ def predict_fusion_data(extracted_data: list[dict], model_dir: str | Path) -> li
     y_pred = pipeline.predict_fusion_samples(samples, svm, artifacts, audit_bge_matrix=audit_bge, net_bge_matrix=net_bge)
     
     # 结构化返回数据，保留 session 字典供后续模块继续接力
-    return [
-        {"sample_id": s.file_name, "prediction": int(p), "mode": "fusion", "session": item["session"]} 
-        for s, p, item in zip(samples, y_pred, extracted_data)
-    ]
+    return [int(p) for p in y_pred]
